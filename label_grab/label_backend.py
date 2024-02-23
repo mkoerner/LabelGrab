@@ -162,7 +162,7 @@ class GrabCutInstance(QObject):
 
 	def update_mask(self):
 		self.mask = (self.grab_cut_mask == cv2.GC_FGD) | (self.grab_cut_mask == cv2.GC_PR_FGD)
-		erosion = cv2.erode(self.mask.astype(np.uint8), self.MORPH_KERNEL, iterations=1).astype(np.bool)
+		erosion = cv2.erode(self.mask.astype(np.uint8), self.MORPH_KERNEL, iterations=1).astype(np.bool_)
 		self.contour_mask = self.mask & ~erosion
 		self.contour_where = np.where(self.contour_mask)
 
@@ -456,7 +456,7 @@ class LabelBackend(QObject):
 		try: # this has to finish, we don't want to break UI interaction
 
 			if self.instance_selected:
-				center_pt = np.rint(center.toTuple()).astype(dtype=np.int)
+				center_pt = np.rint(center.toTuple()).astype(dtype=np.int32)
 
 				self.instance_selected.paint_circle(label_to_paint, center_pt)
 				self.instance_selected.grab_cut_update()
@@ -541,7 +541,7 @@ class LabelBackend(QObject):
 	@Slot(QRectF, int)
 	def new_instance(self, roi_rect_qt : QRectF, sem_class_id : int):
 		try: # this has to finish, we don't want to break UI interaction
-			roi_rect = np.rint(self.qml_rect_to_np(roi_rect_qt)).astype(np.int)
+			roi_rect = np.rint(self.qml_rect_to_np(roi_rect_qt)).astype(np.int32)
 			sem_class = self.config.classes_by_id.get(sem_class_id, self.config.classes[0])
 
 			margin = 32
